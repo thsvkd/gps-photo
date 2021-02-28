@@ -18,4 +18,4 @@ if __name__ == "__main__":
     img_dst_path = "img_dst"
 
     # utils.make_timeline(timeline_json_path, gpsjson_path)
-    utils.make_gps_photo(img_dst_path, img_src_path, timeline_json_path)
+    utils.MakeGPSphoto(img_dst_path, img_src_path, timeline_json_path)
