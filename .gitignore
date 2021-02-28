@@ -3,5 +3,6 @@
 *.JPG
 *.json
 Takeout
+__pycache__
 # img_src
 # img_dst
