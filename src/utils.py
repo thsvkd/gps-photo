@@ -8,14 +8,14 @@ import datetime
 from tqdm import tqdm
 
 
-def append_GPSInfo(timeline, time, latitude, longitude):
+def AppendGPSInfo(timeline, time, latitude, longitude):
     timeline.append({"time": time,
                      "latitudeE7": latitude,
                      "longitudeE7": longitude})
     return timeline
 
 
-def make_timeline(timeline_json_path, json_path):
+def MakeTimeline(timeline_json_path, json_path):
 
     # open json folder
     year_list = os.listdir(json_path)
@@ -52,7 +52,7 @@ def make_timeline(timeline_json_path, json_path):
                         simplifiedRawPath = []
 
                         try:
-                            append_GPSInfo(
+                            AppendGPSInfo(
                                 monthtimeline, startTimestampMs, startLocation['latitudeE7'], startLocation['longitudeE7'])
                         except KeyError:
                             continue
@@ -61,10 +61,10 @@ def make_timeline(timeline_json_path, json_path):
                             simplifiedRawPath = activitySegment['simplifiedRawPath']
 
                             for j in simplifiedRawPath['points']:
-                                append_GPSInfo(
+                                AppendGPSInfo(
                                     monthtimeline, j['timestampMs'], j['latE7'], j['lngE7'])
 
-                        append_GPSInfo(
+                        AppendGPSInfo(
                             monthtimeline, endTimestampMs, endLocation['latitudeE7'], endLocation['longitudeE7'])
 
                     elif 'placeVisit' in i:
@@ -74,9 +74,9 @@ def make_timeline(timeline_json_path, json_path):
                         startTimestampMs = duration['startTimestampMs']
                         endTimestampMs = duration['endTimestampMs']
 
-                        append_GPSInfo(monthtimeline, startTimestampMs,
-                                       location['latitudeE7'], location['longitudeE7'])
-                        append_GPSInfo(
+                        AppendGPSInfo(monthtimeline, startTimestampMs,
+                                      location['latitudeE7'], location['longitudeE7'])
+                        AppendGPSInfo(
                             monthtimeline, endTimestampMs, location['latitudeE7'], location['longitudeE7'])
 
             yeartimeline += monthtimeline
@@ -88,7 +88,7 @@ def make_timeline(timeline_json_path, json_path):
     json.dump(wholetimeline, f, indent=4)
 
 
-def make_gps_photo(img_dst_path, img_src_path, timeline_json_path='Timeline.json'):
+def MakeGPSPhoto(img_dst_path, img_src_path, timeline_json_path='Timeline.json'):
     file_list = os.listdir(img_src_path)
 
     f = open(os.path.join(timeline_json_path), encoding='UTF8')
@@ -120,7 +120,7 @@ def make_gps_photo(img_dst_path, img_src_path, timeline_json_path='Timeline.json
                 print("%s -> %s -> %s" %
                       (point['time'], unixtime, json_obj[i + 1]['time']))
 
-                latitudeE7_list, longitudeE7_list = degree_conversion(point)
+                latitudeE7_list, longitudeE7_list = DegreeConversion(point)
 
                 exif['GPS'][1] = b'N'
                 exif['GPS'][2] = (
@@ -135,7 +135,7 @@ def make_gps_photo(img_dst_path, img_src_path, timeline_json_path='Timeline.json
                 break
 
 
-def degree_conversion(point):
+def DegreeConversion(point):
     latitudeE7 = point['latitudeE7'] / 10000000
     longitudeE7 = point['longitudeE7'] / 10000000
     latitudeE7_list = []
