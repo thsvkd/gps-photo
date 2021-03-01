@@ -1,1 +1,1 @@
-This folder contains destination image file
+destination image file folder

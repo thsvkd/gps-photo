@@ -1,1 +1,1 @@
-This folder contains source image file
+source image file folder

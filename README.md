@@ -13,7 +13,7 @@ In this project you can insert location information using our location informati
 
 `pip install -r requirements.txt`
 
-## use gps-photo
+## using gps-photo
 
 ### window
 
@@ -25,4 +25,26 @@ In this project you can insert location information using our location informati
 
 ## parameter
 
-python src/main.py -s [image source folder path] -d [image destination folder path] -gps [google's Takeout folder path] -tl [Timeline.json's path]
+### --src, -s
+
+image source folder path
+
+ex) `-s img_src`
+
+### --dst, -d
+
+image destination folder path
+
+ex) `-d img_dst`
+
+### --gpsjsonpath, -gps
+
+google's Takeout folder's path
+
+ex) `-gps Takeout`
+
+### --timelinepath, -tl
+
+Timeline.json's path
+
+ex) `-tl Timeline.json`
