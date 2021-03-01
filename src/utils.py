@@ -98,28 +98,15 @@ def MakeGPSPhoto(img_dst_path, img_src_path, timeline_json_path='Timeline.json')
     json_obj = json_obj['timelineObj']
 
     for img_name in tqdm(file_list, desc='processing images'):
+        if img_name.split('.')[1] == 'md':
+            continue
         img = Image.open(os.path.join(img_src_path, img_name))
         exif = piexif.load(img.info['exif'])
-        time_stamped = exif['0th'][306].decode()
-        time_stamped = time_stamped.split()
-        time_stamped[0] = time_stamped[0].split(':')
-        time_stamped[1] = time_stamped[1].split(':')
 
-        unixtime = datetime.datetime.strptime("%s-%s-%s %s:%s:%s" % (time_stamped[0][0],
-                                                                     time_stamped[0][1],
-                                                                     time_stamped[0][2],
-                                                                     time_stamped[1][0],
-                                                                     time_stamped[1][1],
-                                                                     time_stamped[1][2]),
-                                              '%Y-%m-%d %H:%M:%S').timestamp()
-        unixtime *= 1000
-        unixtime = int(unixtime)
+        unixtime = Date2Unixtime(exif['0th'][306].decode())
 
         for i, point in enumerate(json_obj):
             if int(point['time']) < unixtime and int(json_obj[i + 1]['time']) > unixtime:
-                print("%s -> %s -> %s" %
-                      (point['time'], unixtime, json_obj[i + 1]['time']))
-
                 latitudeE7_list, longitudeE7_list = DegreeConversion(point)
 
                 exif['GPS'][1] = b'N'
@@ -133,6 +120,24 @@ def MakeGPSPhoto(img_dst_path, img_src_path, timeline_json_path='Timeline.json')
                 img.save(os.path.join(img_dst_path, img_name),
                          "jpeg", exif=exif_bytes)
                 break
+
+
+def Date2Unixtime(time_stamp):
+    time_stamp = time_stamp.split()
+    time_stamp[0] = time_stamp[0].split(':')
+    time_stamp[1] = time_stamp[1].split(':')
+
+    unixtime = datetime.datetime.strptime("%s-%s-%s %s:%s:%s" % (time_stamp[0][0],
+                                                                 time_stamp[0][1],
+                                                                 time_stamp[0][2],
+                                                                 time_stamp[1][0],
+                                                                 time_stamp[1][1],
+                                                                 time_stamp[1][2]),
+                                          '%Y-%m-%d %H:%M:%S').timestamp()
+
+    unixtime *= 1000
+    unixtime = int(unixtime)
+    return unixtime
 
 
 def DegreeConversion(point):
